@@ -28,7 +28,7 @@ int32_t anchors_y[num_anchors] = {370,3630,4030,0};                   // anchor 
 int32_t heights[num_anchors] =    {1830,765,870, 870};           // anchor z-coordinates in mm
 
 uint8_t algorithm = POZYX_POS_ALG_UWB_ONLY;             // positioning algorithm to use. try POZYX_POS_ALG_TRACKING for fast moving objects.
-uint8_t dimension = POZYX_3D;                           // positioning dimension
+uint8_t dimension = POZYX_2D;                           // positioning dimension
 int32_t height = 1000;                                  // height of device, required in 2.5D positioning
 
 

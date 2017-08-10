@@ -26,7 +26,7 @@ String  inString;      //String for testing serial communication
 // some variables for plotting the map
 int offset_x = 30;
 int offset_y = 30;
-float pixel_per_mm = 0.5;
+float pixel_per_mm = 0.1;
 int border = 500;
 int thick_mark = 500;
 int device_size = 15;
