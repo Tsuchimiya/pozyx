@@ -30,7 +30,7 @@ float pixel_per_mm = 0.1;
 int border = 500;
 int thick_mark = 500;
 int device_size = 15;
-String name = "traject 1";
+String name = "traject bordure";
 // creates an empty list of pozyx devices
 PozyxDevice[] pozyxDevices = {}; 
 
@@ -45,7 +45,7 @@ class PozyxDevice{
   public PozyxDevice(int ID){this.ID = ID;
   println("openning file");
     try{
-      this.f=new FileWriter("resus-"+name+".txt");
+      this.f=new FileWriter("resus-"+this.ID+name+".txt");
     }
     catch(Exception e){
       println("error while opening file");
