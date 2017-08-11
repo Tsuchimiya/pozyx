@@ -22,13 +22,12 @@ bool remote = false;                                    // set this to true to u
 
 boolean use_processing = true;                         // set this to true to output data for the processing sketch
 const uint8_t num_anchors = 4;                                    // the number of anchors
-uint16_t anchors[num_anchors] = {0x6109,0x6121, 0x6115, 0x6157};     // the network id of the anchors: change these to the network ids of your anchors.
+uint16_t anchors[num_anchors] = { 0x6121,0x6115,0x6157, 0x6109};     // the network id of the anchors: change these to the network ids of your anchors.
 int32_t anchors_x[num_anchors] = {4930,0 , 5120 ,250 };               // anchor x-coorindates in mm
-int32_t anchors_y[num_anchors] = {370,3630,4030,0};                   // anchor y-coordinates in mm
-int32_t heights[num_anchors] =    {1830,765,870, 870};           // anchor z-coordinates in mm
-
-uint8_t algorithm = POZYX_POS_ALG_UWB_ONLY;             // positioning algorithm to use. try POZYX_POS_ALG_TRACKING for fast moving objects.
-uint8_t dimension = POZYX_2D;                           // positioning dimension
+int32_t anchors_y[num_anchors] = {370,3630,4030,0} ;              // anchor y-coordinates in mm
+int32_t heights[num_anchors] =  {1830,770,1940,870};            // anchor z-coordinates in mm
+uint8_t algorithm = POZYX_POS_ALG_TRACKING;             // positioning algorithm to use. try POZYX_POS_ALG_TRACKING for fast moving objects.
+uint8_t dimension = POZYX_3D;                           // positioning dimension
 int32_t height = 1000;                                  // height of device, required in 2.5D positioning
 
 
@@ -63,6 +62,8 @@ void setup(){
   Pozyx.clearDevices(remote_id);
   // sets the anchor manually
   setAnchorsManual();
+  
+  
   // sets the positioning algorithm
   Pozyx.setPositionAlgorithm(algorithm, dimension, remote_id);
 

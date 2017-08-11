@@ -179,14 +179,14 @@ void drawDevice(PozyxDevice device){
   stroke(0, 0, 0);
   fill(0, 0, 0);
   int[] current_position = device.getCurrentPosition();
-  ellipse(pixel_per_mm * current_position[1] - device_size/2, pixel_per_mm * current_position[0] + device_size/2, device_size, device_size);
+  ellipse(pixel_per_mm * current_position[0] - device_size/2, pixel_per_mm * current_position[1] + device_size/2, device_size, device_size);
   
   
   pushMatrix();
   rotateX(radians(180));
   fill(0);
   textSize(11);
-  text("0x" + hex(device.ID, 4), pixel_per_mm * current_position[1] - 3 * device_size / 2, - pixel_per_mm * current_position[0] + device_size);
+  text("0x" + hex(device.ID, 4), pixel_per_mm * current_position[0] - 3 * device_size / 2, - pixel_per_mm * current_position[1] + device_size);
   textSize(12);
   popMatrix();
 }
