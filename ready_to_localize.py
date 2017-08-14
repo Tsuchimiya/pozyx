@@ -71,7 +71,7 @@ class ReadyToLocalize(object):
             seconds = int(time.strftime("%S"))
             minutes = int (time.strftime("%M")) * 60
             hours = int(time.strftime("%H")) * 60 * 60
-            line = "T="+int(seconds+minutes+hours)+"\t X="+str(position.x)+"\t Y="+str(position.y)+"\t Z="+str(position.z)
+            line = "T="+str(seconds+minutes+hours)+"\t X="+str(position.x)+"\t Y="+str(position.y)+"\t Z="+str(position.z)
             self.file.write(line+"\n")
 
     def printPublishPosition(self, position):
