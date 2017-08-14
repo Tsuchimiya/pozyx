@@ -32,8 +32,8 @@ class ReadyToLocalize(object):
         prefix = ""
 
         # if we are not into pozyx directory going into it 
-        if(os.getcwd().find("pozyx",0) < 0):
-            prefix = "/home/odroid/pozyx/"
+        if(os.getcwd().find("POZYX",0) < 0):
+            prefix = "~/POZYX/"
         if not os.path.isdir(prefix+'output'):
             os.mkdir(prefix+'output')
         today = time.strftime("%d-%m-%y")
