@@ -7,3 +7,24 @@
 # Short-Description: Start daemon at boot time
 # Description:       Enable service provided by daemon.
 ### END INIT INFO
+
+case "$1" in
+  start) 
+    echo -n "Starting pozyx program: "
+    nohup python3 /home/odroid/POZYX/ready_to_localize.py > /dev/null 2> ~/POZYX/err
+    echo "ok"
+    ;;
+  stop)
+    echo -n "Stopping all myServer processes: "
+    killall python3
+    echo "pozyx"
+    ;;
+  restart)
+    # Re-run this script with stop and start arguments.
+    $0 stop
+    sleep 5
+    $0 start 
+    ;;
+  reload|force-reload)
+    echo "WARNING reload and force-reload not supported by this script
+esac
