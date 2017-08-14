@@ -14,7 +14,8 @@ from time import sleep
 from pypozyx import *
 from pythonosc.osc_message_builder import OscMessageBuilder
 from pythonosc.udp_client import SimpleUDPClient
-
+import os
+import time
 
 class ReadyToLocalize(object):
     """Continuously calls the Pozyx positioning function and prints its position."""
@@ -28,6 +29,14 @@ class ReadyToLocalize(object):
         self.dimension = dimension
         self.height = height
         self.remote_id = remote_id
+        if not os.path.isdir('output'):
+            os.mkdir('output')
+        today = time.strftime("%d-%m-%y")
+        if not os.path.isdir("output/"+today):
+            os.mkdir("output/"+today)
+        
+        
+        self.file = open("output/"+today+"/"+time.strftime("%Hh%Mm%Ss")+".txt","w")
 
     def setup(self):
         """Sets up the Pozyx for positioning by calibrating its anchor list."""
@@ -52,8 +61,15 @@ class ReadyToLocalize(object):
             position, self.dimension, self.height, self.algorithm, remote_id=self.remote_id)
         if status == POZYX_SUCCESS:
             self.printPublishPosition(position)
+            self.store_position(position)
         else:
             self.printPublishErrorCode("positioning")
+
+    def store_position(position):
+        """ Stores a position log into a file """
+        if not (self.file is None):
+            line = "T="+time.strftime("%H:%M:%S")+"/t X="+position.x+"\t Y="+position.y+"\t Z="+position.z
+            self.file.write(line+"\n")
 
     def printPublishPosition(self, position):
         """Prints the Pozyx's position and possibly sends it as a OSC packet"""
@@ -159,7 +175,7 @@ if __name__ == "__main__":
     dimension = POZYX_3D               # positioning dimension
     height = 1000                      # height of device, required in 2.5D positioning
 
-    pozyx = PozyxSerial(serial_port,print_output=True)
+    pozyx = PozyxSerial(serial_port)
     r = ReadyToLocalize(pozyx, osc_udp_client, anchors, algorithm, dimension, height, remote_id)
     r.setup()
     while True:
