@@ -65,7 +65,7 @@ class ReadyToLocalize(object):
         else:
             self.printPublishErrorCode("positioning")
 
-    def store_position(position):
+    def store_position(self,position):
         """ Stores a position log into a file """
         if not (self.file is None):
             line = "T="+time.strftime("%H:%M:%S")+"/t X="+position.x+"\t Y="+position.y+"\t Z="+position.z
