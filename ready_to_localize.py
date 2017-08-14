@@ -36,7 +36,7 @@ class ReadyToLocalize(object):
             os.mkdir("output/"+today)
         
         
-        self.file = open("output/"+today+"/"+time.strftime("%Hh%Mm%Ss")+".txt","w")
+        self.file = open("output/"+today+"/"+time.strftime("%d-%m-%y_%Hh%Mm%Ss")+".txt","w")
 
     def setup(self):
         """Sets up the Pozyx for positioning by calibrating its anchor list."""
