@@ -1,0 +1,20 @@
+{
+    "collab_server" : "",
+    "contents" : "filename <- c(\"resus-0ligne1H3mb.txt\",\n              \"resus-0ligne2H3mb.txt\",\n              \"resus-0ligne1V2mb.txt\",\n              \"resus-0ligne2V2mb.txt\",\n              \"resus-0ligne3V2mb.txt\")\n\nfilenames_test2 <- c(\"resus-01H4m3c.txt\",\n               \"resus-02H4m3c.txt\",\n               \"resus-01V130cm.txt\",\n               \"resus-02V130cm.txt\",\n               \"resus-03V130cm.txt\",\n               \"resus-04V130cm.txt\");\nfilenameligneV_test2 <- c(\n               \"resus-02H4m3c.txt\",\n               \"resus-02H4mleft3c.txt\"\n               \n               );\n\nfilenames_test3 <- c(\n  \"resus-01H3m4bc.txt\",\n  \"resus-02H3m4bc.txt\",\n  \"resus-01V150cm4bc.txt\",\n  \"resus-02V150cm4bc.txt\",\n  \"resus-03V150cm4bc.txt\",\n  \"resus-04V150cm4bc.txt\"\n  \n)\n\nfilenames_test3_uwb <- c(\n  \"resus-01H3m4c.txt\",\n  \"resus-02H3m4c.txt\",\n  \"resus-01V150cm4c.txt\",\n  \"resus-02V150cm4c.txt\",\n  \"resus-03V150cm4c.txt\"\n  \n)\n\nfilenames_test3_lines <- c(\n  \n  \"resus-02H3m4bc.txt\",\n  \"resus-02HL3m4bc.txt\"\n)\n\nfilenames_test3_lines <- c(\n\n  \"resus-01VL150cm4c.txt\",\n  \"resus-01V150cm4c.txt\"\n)\n\ninit <- FALSE;\nnb <- 0 \n\ncol <- \"blue\"\n\nfor (j in filenames_test3_lines){\nif(nb >= 1){\n  col <- \"red\"\n}\n  \ndf <- read.table(paste0(\"pozyx_ready_to_localize/\",\n                        j) , sep=\",\")\necarts <- matrix(0,nrow=nrow(df),ncol =ncol(df))\nmoy_ecarts <- array(0,dim=ncol(df))\necartype <- array(0,dim=ncol(df))\nfor (i in 1:ncol(df)){\n  df[,i] <- as.numeric(substring(df[,i],4,9))\n  moy <- mean(df[,i])\n  ecarts[,i] <- abs(moy - df[,i])\n  moy_ecarts[i] <- mean(ecarts[,i])\n  ecartype[i] <- sqrt(mean(df[,i]^2)-mean(df[,i])^2)\n}\nprint(\"-----------------------------\")\nprint(j)\nprint(\"moy\")\nprint(moy_ecarts)\nprint(\"ecartype\")\nprint(ecartype)\nprint(paste0(\"lg X = \",(max(df[,2])-min(df[,2]))))\nprint(paste0(\"lg Y = \",(max(df[,1])-min(df[,1]))))\nprint(\"-----------------------------\")\nif(!init){\n  plot(df[,2],df[,1],xlab = \"X\", ylab=\"Y\", col=col,xlim = c(0,5000), ylim = c(0,8000))\n  init <- TRUE\n}\nelse{\n  points(df[,2],df[,1],col=col)\n}\nnb <- nb + 1\nmin(df[,2])\n\n}",
+    "created" : 1502461263243.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "2801808287",
+    "id" : "93E47A20",
+    "lastKnownWriteTime" : 1502476555,
+    "last_content_update" : 1502476555467,
+    "path" : "~/posyx/analyze datas.R",
+    "project_path" : "analyze datas.R",
+    "properties" : {
+    },
+    "relative_order" : 1,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_source"
+}
