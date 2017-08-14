@@ -164,3 +164,7 @@ if __name__ == "__main__":
     r.setup()
     while True:
         r.loop()
+
+##
+# curl -O https://bootstrap.pypa.io/get-pip.py
+# sudo python3.2 get-pip.py
