@@ -29,14 +29,19 @@ class ReadyToLocalize(object):
         self.dimension = dimension
         self.height = height
         self.remote_id = remote_id
-        if not os.path.isdir('output'):
-            os.mkdir('output')
+        prefix = ""
+
+        # if we are not into pozyx directory going into it 
+        if(os.getcwd().find("pozyx",0) < 0):
+            prefix = "/home/odroid/pozyx/"
+        if not os.path.isdir(prefix+'output'):
+            os.mkdir(prefix+'output')
         today = time.strftime("%d-%m-%y")
-        if not os.path.isdir("output/"+today):
-            os.mkdir("output/"+today)
+        if not os.path.isdir(prefix+"output/"+today):
+            os.mkdir(prefix+"output/"+today)
         
         
-        self.file = open("output/"+today+"/"+time.strftime("%d-%m-%y_%Hh%Mm%Ss")+".txt","w")
+        self.file = open(prefix+"output/"+today+"/"+time.strftime("%d-%m-%y_%Hh%Mm%Ss")+".txt","w")
 
     def setup(self):
         """Sets up the Pozyx for positioning by calibrating its anchor list."""
