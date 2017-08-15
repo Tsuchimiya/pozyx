@@ -159,9 +159,10 @@ class ReadyToLocalize(object):
                 sleep(0.025)
 
 if __name__ == "__main__":
+    sleep(5)
     # shortcut to not have to find out the port yourself
     serial_port = get_serial_ports()[0].device
-
+    print("serial"+serial_port)
     remote_id = 0x6069               # remote device network ID
     remote = False                   # whether to use a remote device
     if not remote:
@@ -182,12 +183,13 @@ if __name__ == "__main__":
     algorithm = POZYX_POS_ALG_TRACKING  # positioning algorithm to use
     dimension = POZYX_3D               # positioning dimension
     height = 1000                      # height of device, required in 2.5D positioning
-
+    sleep(50)
     pozyx = PozyxSerial(serial_port)
     r = ReadyToLocalize(pozyx, osc_udp_client, anchors, algorithm, dimension, height, remote_id)
     r.setup()
     while True:
         r.loop()
+
 
 ##
 # curl -O https://bootstrap.pypa.io/get-pip.py
