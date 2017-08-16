@@ -193,16 +193,15 @@ def main_localize(start,changeFile,calib,fileSem,calibSem,treat):
     if use_processing:
         osc_udp_client = SimpleUDPClient(ip, network_port)
         # necessary data for calibration, change the IDs and coordinates yourself
-    print ("[LOCALIZE] waiting for anchors")
+    print ("[LOCALIZE] waiting for calibration")
     calib.wait()
     anchors = []
     names = [0x6121,0x6115,0x6157,0x6109]
-    print("[LOCALIZE] waiting for sem calib")
     calibSem.acquire()
-    print("[LOCALIZE] we have sem calib")
     file = open("/tmp/anchors.txt","r")
     for i in range(4):
         line = file.readline()
+        print("[LOCALIZE] line = "+line+" names = "+str(names[i]))
         indx = line.find(",",0)
         indy = line.find(",",indx + 1 )
         anchors.append(DeviceCoordinates(names[i],
