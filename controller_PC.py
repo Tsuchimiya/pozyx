@@ -24,8 +24,7 @@ class control(object):
         m = message.Message(CLIENT,start = True)
         if(self.C.send_msg(m) < 0):
             self.IHM.event(ACQUISITION_ERROR,"ISSUE WHILE SENDING")
-        else:
-            self.IHM.event(ACQUISITION_STATUS, "ACQUISITION IN PROGRESS")
+
 
     def send_stop(self):
         m = message.Message(CLIENT, stop=True)
@@ -33,16 +32,15 @@ class control(object):
             try :
                 if (self.C.send_msg(m) < 0):
                     self.IHM.event(ACQUISITION_ERROR, "ISSUE WHILE SENDING")
-                else:
-                    self.IHM.event(ACQUISITION_STATUS, "ACQUISITION PAUSED")
             except ConnectionResetError:
                 print ("Connection failed, can't send msg")
+
     def send_filename(self,name):
         m = message.Message(CLIENT, Filename= name)
         if (self.C.send_msg(m) < 0):
             self.IHM.event(FILE_ERROR, "ISSUE WHILE SENDING")
-        else:
-            self.IHM.event(FILE_STATUS, "FILE UP TO DATE")
+
+
 
     def close_connection(self):
         m = message.Message(CLIENT, close= True)

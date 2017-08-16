@@ -211,21 +211,28 @@ def main_localize(start,changeFile,fileSem,treat):
             file = open("/tmp/filename.txt","r")
             name = file.read()
             print("LOCALIZE: name"+name)
+
+            file.close()
+            fileSem.release()
             if not r is None:
-                if (r.updateFilename(name)< 0):
+                if (r.updateFilename(name) < 0):
                     treat.send_issue("File exists already")
                 else:
                     treat.send_filename()
-            file.close()
-            fileSem.release()
-            r = ReadyToLocalize(pozyx, osc_udp_client, anchors,name, algorithm, dimension, height, remote_id)
+            else:
+                r = ReadyToLocalize(pozyx, osc_udp_client, anchors, name, algorithm, dimension, height, remote_id)
+                treat.send_filename()
+
             if (r is None):
                 treat.send_issue("File exists already")
             r.setup()
             print("Filename changed "+name+"\n")
 
             changeFile.set()
-        r.loop()
+        try:
+            r.loop()
+        except:
+            treat.send_issue("Issue while positionning... (check anchors)")
     return
 if __name__ == "__main__":
     sleep(5)

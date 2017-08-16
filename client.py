@@ -15,12 +15,14 @@ class CTreat(treat.Treat):
         self.IHM = IHM
     def start(self):
         print("[Client] start OK")
+        self.IHM.event(ACQUISITION_STATUS, "ACQUISITION IN PROGRESS")
 
     def stop(self):
         print("[Client] stop OK")
-
+        self.IHM.event(ACQUISITION_STATUS, "ACQUISITION PAUSED")
     def filename(self,data):
         print("[Client] filename OK")
+        self.IHM.event(FILE_STATUS, "FILE UP TO DATE")
 
     def close(self):
         print("[Client] Closing connection")
