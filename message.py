@@ -116,6 +116,7 @@ class Message(object):
 
     def deformate(self,msg):
         anchors = []
+        print ("[MESSAGE] DEFORMATING")
         for i in range(4):
             index= msg.find("A"+str(i+1),0)
             xindex = index+2
@@ -139,7 +140,8 @@ class Message(object):
         strMsg = self.msg.decode()
         if len(strMsg) > 0:
             if (strMsg[0] == CALIBRATE):
-                return [True, self.deformate(strMsg[1:])]
+                print("[MESSAGE] yeah it is an anchor calibration")
+                return [True, self.deformate(strMsg[1:len(strMsg)])]
             if (strMsg[0] == OK_CALIBRATE):
                 return [True, ""]
         return [False, ""]
