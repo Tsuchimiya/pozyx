@@ -82,13 +82,14 @@ class STreat(treat.Treat):
 
     def calibrate(self,data):
         print ("[SERVER] calibration :"+str(data))
-        self.flagCalib.set()
+
         self.semCalib.acquire()
         file = open("/tmp/anchors.txt","w",1) # todo on odroid
         for i in range(4):
             file.write(str(data[i][0])+","+str(data[i][1])+","+str(data[i][2])+"\n")
         file.close()
         self.semCalib.release()
+        self.flagCalib.set()
 
     def send_start(self):
         m = message.Message(SERVER, start=True)

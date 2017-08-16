@@ -193,7 +193,7 @@ def main_localize(start,changeFile,calib,fileSem,calibSem,treat):
     if use_processing:
         osc_udp_client = SimpleUDPClient(ip, network_port)
         # necessary data for calibration, change the IDs and coordinates yourself
-
+    print ("[LOCALIZE] waiting for anchors")
     calib.wait()
     anchors = []
     names = [0x6121,0x6115,0x6157,0x6109]
