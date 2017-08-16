@@ -207,8 +207,9 @@ def main_localize(start,changeFile,calib,fileSem,calibSem,treat):
         anchors.append(DeviceCoordinates(names[i],
                                          Coordinates(int(line[0:(indx)]),
                                                      int(line[(indx +1):(indy)]),
-                                                     int(line[(indy - 1):(len(line)-1)])
+                                                     int(line[(indy - 1):(len(line))])
                                                      ) ) )
+        print ("[LOCALIZE] last coord = "+ int(line[(indy - 1):(len(line))]))
     print ("LOCALIZE : anchors "+ str(anchors))
     treat.send_calibrate()
     file.close()
