@@ -24,7 +24,7 @@ class CTreat(treat.Treat):
         if (self.started):
             self.started = False
             print("[Client] stop OK")
-            self.IHM.event(ACQUISITION_STATUS, "ACQUISITION PAUSED")
+            self.IHM.event(ACQUISITION_ERROR, "ACQUISITION PAUSED")
 
     def filename(self,data):
         print("[Client] filename OK")
