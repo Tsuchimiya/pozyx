@@ -198,17 +198,18 @@ def main_localize(start,changeFile,fileSem,treat):
 
     except :
         treat.send_issue("Problem while connecting to POZYX")
-
+    r = None
     while True:
         start.wait()
         if(not changeFile.isSet()):
             fileSem.acquire()
             file = open("/tmp/filename.txt","r")
             name = file.read()
-            if (r.updateFilename(name)< 0):
-                treat.send_issue("File exists already")
-            else:
-                treat.send_filename()
+            if not r is None:
+                if (r.updateFilename(name)< 0):
+                    treat.send_issue("File exists already")
+                else:
+                    treat.send_filename()
             file.close()
             fileSem.release()
             r = ReadyToLocalize(pozyx, osc_udp_client, anchors, algorithm, dimension, height, remote_id, file_numbers=1)
