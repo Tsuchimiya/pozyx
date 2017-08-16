@@ -135,6 +135,7 @@ class ReadyToLocalize(object):
         """Adds the manually measured anchors to the Pozyx's device list one for one."""
         status = self.pozyx.clearDevices(self.remote_id)
         for anchor in self.anchors:
+            print("[SELF ANCHOR MANUAL] "+anchor)
             status &= self.pozyx.addDevice(anchor, self.remote_id)
         if len(self.anchors) > 4:
             status &= self.pozyx.setSelectionOfAnchors(POZYX_ANCHOR_SEL_AUTO, len(anchors))
@@ -201,7 +202,7 @@ def main_localize(start,changeFile,calib,fileSem,calibSem,treat):
     file = open("/tmp/anchors.txt","r")
     for i in range(4):
         line = file.readline()
-        print("[LOCALIZE] line = "+line+" names = "+str(names[i]))
+        #print("[LOCALIZE] line = "+line+" names = "+str(names[i]))
         indx = line.find(",",0)
         indy = line.find(",",indx + 1 )
         anchors.append(DeviceCoordinates(names[i],
