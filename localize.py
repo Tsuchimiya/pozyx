@@ -16,12 +16,17 @@ from pythonosc.osc_message_builder import OscMessageBuilder
 from pythonosc.udp_client import SimpleUDPClient
 import os
 import time
+from threading import Thread
 
-class ReadyToLocalize(object):
+
+
+
+class ReadyToLocalize(Thread):
     """Continuously calls the Pozyx positioning function and prints its position."""
 
-    def __init__(self, pozyx, osc_udp_client, anchors, filename,
-                 algorithm=POZYX_POS_ALG_UWB_ONLY, dimension=POZYX_3D, height=1000, remote_id=None):
+    def __init__(self, pozyx, osc_udp_client, anchors, algorithm=POZYX_POS_ALG_UWB_ONLY, dimension=POZYX_3D, height=1000, remote_id=None, file_numbers = None):
+        Thread.__init__(self)
+        
         self.pozyx = pozyx
         self.osc_udp_client = osc_udp_client
 
@@ -30,29 +35,22 @@ class ReadyToLocalize(object):
         self.dimension = dimension
         self.height = height
         self.remote_id = remote_id
-        self.prefix = ""
+        prefix = ""
 
         # if we are not into pozyx directory going into it 
         if(os.getcwd().find("POZYX",0) < 0):
-            self.prefix = "/home/odroid/POZYX/"
-        if not os.path.isdir(self.prefix+'output'):
-            os.mkdir(self.prefix+'output')
+            prefix = "/home/odroid/POZYX/"
+        if not os.path.isdir(prefix+'output'):
+            os.mkdir(prefix+'output')
+        today = time.strftime("%d-%m-%y")
+        if not os.path.isdir(prefix+"output/"+today):
+            os.mkdir(prefix+"output/"+today)
 
         # setting a file number if there is already a file in the directory
-        path = self.prefix + "output/"
-        if (os.listdir(path).__contains__(filename)):
-            return None
-        path = path + filename + ".txt"
-        self.file = open(path,"w",1)
-
-    def updateFilename (self,filename):
-
-        if (os.listdir(self.prefix+'output/').__contains__(filename)):
-            return -2
-        else :
-            self.file.close()
-            self.file = open(self.prefix+'output/'+filename+".txt","w",1)
-            return 0
+        nb = 0
+        if not file_numbers is None:
+           nb = len(os.listdir(prefix+"output/"+today))        
+        self.file = open(prefix+"output/"+today+"/"+time.strftime("%d-%m-%y_%Hh%Mm%Ss")+str(nb+1)+".txt","w",1)
 
     def setup(self):
         """Sets up the Pozyx for positioning by calibrating its anchor list."""
@@ -166,93 +164,17 @@ class ReadyToLocalize(object):
             print("ANCHOR,0x%0.4x,%s" % (anchor.network_id, str(anchor.coordinates)))
             if self.osc_udp_client is not None:
                 self.osc_udp_client.send_message(
-                    "/anchor", [anchor.network_id, int(anchor.coordinates.x), int(anchor.coordinates.y), int(anchor.coordinates.z)])
+                    "/anchor", [anchor.network_id, int(anchor_coordinates.x), int(anchor_coordinates.y), int(anchor_coordinates.z)])
                 sleep(0.025)
 
-def main_localize(start,changeFile,fileSem,treat):
-    try :
-        serial_port = get_serial_ports()[0].device
-        print("serial" + serial_port)
-        remote_id = 0x6069  # remote device network ID
-        remote = False  # whether to use a remote device
-        if not remote:
-            remote_id = None
-
-        use_processing = True  # enable to send position data through OSC
-        ip = "127.0.0.1"  # IP for the OSC UDP
-        network_port = 8888  # network port for the OSC UDP
-        osc_udp_client = None
-        if use_processing:
-            osc_udp_client = SimpleUDPClient(ip, network_port)
-        # necessary data for calibration, change the IDs and coordinates yourself
-        anchors = [DeviceCoordinates(0x6121, 1, Coordinates(2750, 30, 1780)),
-                   DeviceCoordinates(0x6115, 1, Coordinates(3500, 4750, 1460)),
-                   DeviceCoordinates(0x6157, 1, Coordinates(167, 8250, 1950)),
-                   DeviceCoordinates(0x6109, 1, Coordinates(30, 30, 930))]
-
-        algorithm = POZYX_POS_ALG_TRACKING  # positioning algorithm to use
-        dimension = POZYX_3D  # positioning dimension
-        height = 1000  # height of device, required in 2.5D positioning
-
-        pozyx = PozyxSerial(serial_port)
-
-    except :
-        treat.send_issue("Problem while connecting to POZYX")
-
-    while True:
-        start.wait()
-        if(not changeFile.isSet()):
-            fileSem.acquire()
-            file = open("/tmp/filename.txt","r")
-            name = file.read()
-            if (r.updateFilename(name)< 0):
-                treat.send_issue("File exists already")
-            else:
-                treat.send_filename()
-            file.close()
-            fileSem.release()
-            r = ReadyToLocalize(pozyx, osc_udp_client, anchors, algorithm, dimension, height, remote_id, file_numbers=1)
-            if (r is None):
-                treat.send_issue("File exists already")
-            r.setup()
-            print("Filename changed "+name+"\n")
-
-            changeFile.set()
-        r.loop()
-    return
-if __name__ == "__main__":
-    sleep(5)
-    # shortcut to not have to find out the port yourself
-    serial_port = get_serial_ports()[0].device
-    print("serial"+serial_port)
-    remote_id = 0x6069               # remote device network ID
-    remote = False                   # whether to use a remote device
-    if not remote:
-        remote_id = None
-
-    use_processing = True             # enable to send position data through OSC
-    ip = "127.0.0.1"                   # IP for the OSC UDP
-    network_port = 8888                # network port for the OSC UDP
-    osc_udp_client = None
-    if use_processing:
-        osc_udp_client = SimpleUDPClient(ip, network_port)
-    # necessary data for calibration, change the IDs and coordinates yourself
-    anchors = [DeviceCoordinates(0x6121, 1, Coordinates(2750, 30, 1780)),
-               DeviceCoordinates(0x6115, 1, Coordinates(3500, 4750, 1460)),
-               DeviceCoordinates(0x6157, 1, Coordinates(167, 8250, 1950)),
-               DeviceCoordinates(0x6109, 1, Coordinates(30, 30, 930))]
-
-    algorithm = POZYX_POS_ALG_TRACKING  # positioning algorithm to use
-    dimension = POZYX_3D               # positioning dimension
-    height = 1000                      # height of device, required in 2.5D positioning
-    sleep(50)
-    pozyx = PozyxSerial(serial_port)
-    r = ReadyToLocalize(pozyx, osc_udp_client, anchors, algorithm, dimension, height, remote_id,file_numbers = 1)
-    r.setup()
-    while True:
-        r.loop()
+    def run(self):
+        while True:
+            r.loop()
+            
+        
+        
 
 
-##
-# curl -O https://bootstrap.pypa.io/get-pip.py
-# sudo python3.2 get-pip.py
+    ##
+    # curl -O https://bootstrap.pypa.io/get-pip.py
+    # sudo python3.2 get-pip.py
