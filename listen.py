@@ -60,14 +60,14 @@ class Listen(Thread):
 
     def run(self):
         while True:
-            try:
+            #try:
                 msg = self.co.recv(self.buffer_size)
                 if not msg : break
                 self.treatMsg(msg)
-            except:
-                print("listen : issue")
-                self.treatment.issue("CONNECTION LOST")
-                return
-                break
+            #except:
+                #print("listen : issue")
+               # self.treatment.issue("CONNECTION LOST")
+               # return
+               # break
 
         return 
