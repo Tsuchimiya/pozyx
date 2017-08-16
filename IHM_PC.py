@@ -48,6 +48,7 @@ class IHM_PC (object):
         self.controller.connection(self,IP.get())
 
     def calib(self,a1,a2,a3,a4):
+        print("calibration")
         [x,y,z]= a1
         stop = False
         if (len(x.get()) <= 0 or len(y.get()) <=0 or len(z.get()) <= 0):
@@ -75,7 +76,8 @@ class IHM_PC (object):
 
         if (not stop):
             self.controller.send_calib([a11,a22,a33,a44])
-            print("calibration")
+
+            print ("[IHM] : calib " + str([a11,a22,a33,a44]))
 
     def update(self):
         print("File not up to date")
@@ -129,7 +131,7 @@ class IHM_PC (object):
                            bg="#000000" )
 
         self.calibStatus = Label(self.root,
-                                       text="",
+                                       text="WAITING FOR CALIBRATION (do it just once)",
                                        height=2,
                                        width=30,
                                        fg="#FF3333",
