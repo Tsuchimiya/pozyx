@@ -31,6 +31,7 @@ class STreat(treat.Treat):
         self.flagStart = threading.Event()
         self.flagStart.clear()
         self.flagFile = threading.Event()
+        self.flagFile.clear()
         self.sem = threading.Semaphore(value = 0)
         self.prefix = ""
         file = open("/tmp/filename.txt","w",1) # todo on odroid
@@ -43,6 +44,7 @@ class STreat(treat.Treat):
     # changing filename of the thread POZYX
     def filename(self,name):
         if (self.flagStart.isSet()):
+            print("changing filename of pozyx: name "+name)
             self.sem.acquire()
             file = open("/tmp/filename.txt","w",1) # todo on odroid
             file.write(name)
