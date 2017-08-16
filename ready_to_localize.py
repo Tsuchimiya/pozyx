@@ -210,6 +210,7 @@ def main_localize(start,changeFile,fileSem,treat):
             fileSem.acquire()
             file = open("/tmp/filename.txt","r")
             name = file.read()
+            print("LOCALIZE: name"+name)
             if not r is None:
                 if (r.updateFilename(name)< 0):
                     treat.send_issue("File exists already")
