@@ -131,8 +131,9 @@ class IHM_PC (object):
                            bg="#000000" )
 
         self.calibStatus = Label(self.root,
-                                       text="WAITING FOR CALIBRATION (do it just once)",
+                                       text="WAITING FOR CALIBRATION",
                                        height=2,
+
                                        width=30,
                                        fg="#FF3333",
                                        bg="#000000")
@@ -141,6 +142,14 @@ class IHM_PC (object):
                         text = "IP address: ")
         filenameField = Label(self.root,
                         text = "Filename: ")
+
+        calibdescB = Label(self.root,
+                           text="Calibration Fields (just calibrate once after connecting)",
+                           font= "bold",
+                           relief = RIDGE,
+                           width = 90,
+                           borderwidth = 1)
+
         manageField = Label(self.root,
                               text="Manage Acquisition: ")
         anch1Field = Label(self.root,
@@ -226,52 +235,55 @@ class IHM_PC (object):
         self.fileStatus.grid(column = 6, row = 2)
 
         # ROW 3
-        blank.grid(column = 0, row = 3)
+        blank.grid(column =0, row = 3)
 
         # ROW 4
-        calibB.grid(column = 5, row = 4, rowspan = 4)
-        self.calibStatus.grid(column = 6, row = 4, rowspan = 4)
-        anch1Field.grid(column = 1 , row = 4)
-        anch2Field.grid(column = 2, row=4)
-        anch3Field.grid(column = 3, row=4)
-        anch4Field.grid(column = 4, row=4)
+        calibdescB.grid(column = 0,columnspan = 7, row = 4)
 
         # ROW 5
-        xField.grid(column = 0, row = 5)
-        x1Box.grid(column = 1, row = 5)
-        x2Box.grid(column=2, row=5)
-        x3Box.grid(column=3, row=5)
-        x4Box.grid(column=4, row=5)
-
+        calibB.grid(column = 5, row = 4, rowspan = 5)
+        self.calibStatus.grid(column = 6, row = 5, rowspan = 4)
+        anch1Field.grid(column = 1 , row = 5)
+        anch2Field.grid(column = 2, row=5)
+        anch3Field.grid(column = 3, row=5)
+        anch4Field.grid(column = 4, row=5)
 
         # ROW 6
-        yField.grid(column=0, row=6)
-        y1Box.grid(column=1, row=6)
-        y2Box.grid(column=2, row=6)
-        y3Box.grid(column=3, row=6)
-        y4Box.grid(column=4, row=6)
+        xField.grid(column = 0, row = 6)
+        x1Box.grid(column = 1, row = 6)
+        x2Box.grid(column=2, row=6)
+        x3Box.grid(column=3, row=6)
+        x4Box.grid(column=4, row=6)
+
 
         # ROW 7
-        zField.grid(column=0, row=7)
-        z1Box.grid(column=1, row=7)
-        z2Box.grid(column=2, row=7)
-        z3Box.grid(column=3, row=7)
-        z4Box.grid(column=4, row=7)
+        yField.grid(column=0, row=7)
+        y1Box.grid(column=1, row=7)
+        y2Box.grid(column=2, row=7)
+        y3Box.grid(column=3, row=7)
+        y4Box.grid(column=4, row=7)
 
         # ROW 8
-        blank3.grid(column=0, row=8)
+        zField.grid(column=0, row=8)
+        z1Box.grid(column=1, row=8)
+        z2Box.grid(column=2, row=8)
+        z3Box.grid(column=3, row=8)
+        z4Box.grid(column=4, row=8)
 
         # ROW 9
-        manageField.grid(column=3, row=9)
-        startB.grid(column=4, row=9)
-        stopB.grid(column=5, row=9)
-        self.acquisitionStatus.grid(column=6, row=9)
+        blank3.grid(column=0, row=9)
 
         # ROW 10
-        blank2.grid(column=0, row=10)
+        manageField.grid(column=3, row=10)
+        startB.grid(column=4, row=10)
+        stopB.grid(column=5, row=10)
+        self.acquisitionStatus.grid(column=6, row=10)
 
         # ROW 11
-        self.issueStatus.grid(column = 0, row = 11, columnspan = 7)
+        blank2.grid(column=0, row=11)
+
+        # ROW 12
+        self.issueStatus.grid(column = 0, row = 12, columnspan = 7)
 
         self.root.protocol("WM_DELETE_WINDOW", self.on_closing)
         self.root.mainloop()
