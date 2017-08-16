@@ -61,7 +61,7 @@ class Message(object):
         msg = ""
         print ("MESSAGE FORMATTING")
         for i in range(len(anchors)):
-            msg = msg + "A1" + str(anchors[i][0]) +"," + str(anchors[i][1]) + "," + str(anchors[i][2])
+            msg = msg + "A"+str(i+1) + str(anchors[i][0]) +"," + str(anchors[i][1]) + "," + str(anchors[i][2])
         print("formate = "+msg)
         return msg
 
