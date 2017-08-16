@@ -37,7 +37,7 @@ class STreat(treat.Treat):
         self.flagCalib.clear()
 
         self.sem = threading.Semaphore(value = 0)
-        self.semCalib = threading.Semaphore(value = 1)
+        self.semCalib = threading.Semaphore()
         self.prefix = ""
         file = open("/tmp/filename.txt","w",1) # todo on odroid
         file.write("default")
@@ -81,7 +81,7 @@ class STreat(treat.Treat):
         self.serveur.close()
 
     def calibrate(self,data):
-        print ("[SERVER] calibration :"+str(data))
+
 
         self.semCalib.acquire()
         file = open("/tmp/anchors.txt","w",1) # todo on odroid
@@ -90,6 +90,7 @@ class STreat(treat.Treat):
         file.close()
         self.semCalib.release()
         self.flagCalib.set()
+        print("[SERVER] calibration :" + str(data))
 
     def send_start(self):
         m = message.Message(SERVER, start=True)
