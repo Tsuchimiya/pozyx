@@ -43,36 +43,34 @@ class STreat(treat.Treat):
 
     # changing filename of the thread POZYX
     def filename(self,name):
-        if (self.flagStart.isSet()):
-            print("changing filename of pozyx: name "+name)
-            self.sem.acquire()
-            file = open("/tmp/filename.txt","w",1) # todo on odroid
-            file.write(name)
-            file.close()
-            self.flagFile.clear()
-            self.sem.release()
-            sleep(1)
+
+        print("changing filename of pozyx: name "+name)
+        self.sem.acquire()
+        file = open("/tmp/filename.txt","w",1) # todo on odroid
+        file.write(name)
+        file.close()
+        self.flagFile.clear()
+        self.sem.release()
+
             #m = message.Message(SERVER,Filename = "Ok")
             #self.serveur.send_msg(m)
 
     # starting the thread POZYX
     def start(self):
         self.flagStart.set()
-        sleep(1)
+
         #m = message.Message(SERVER,start = True)
         #self.serveur.send_msg(m)
         
     # stopping the thread POZYX
     def stop(self):
         self.flagStart.clear()
-        sleep(1)
         self.send_stop()
 
     def close(self):
         self.flagStart.clear()
         #m = message.Message(SERVER,close = True)
         #self.serveur.send_msg(m)
-        sleep(1)
         self.serveur.close()
 
     def send_start(self):

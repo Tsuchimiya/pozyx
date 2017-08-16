@@ -37,8 +37,10 @@ class control(object):
 
     def send_filename(self,name):
         m = message.Message(CLIENT, Filename= name)
+        self.send_stop()
         if (self.C.send_msg(m) < 0):
             self.IHM.event(FILE_ERROR, "ISSUE WHILE SENDING")
+
 
 
 
