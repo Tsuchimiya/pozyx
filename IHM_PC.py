@@ -48,8 +48,34 @@ class IHM_PC (object):
         self.controller.connection(self,IP.get())
 
     def calib(self,a1,a2,a3,a4):
-        self.controller.send_calib([a1,a2,a3,a4])
-        print("calibration")
+        [x,y,z]= a1
+        stop = False
+        if (len(x.get()) <= 0 or len(y.get()) <=0 or len(z.get()) <= 0):
+            self.calibStatus.config(text = "ERROR FILL ALL ANCHORS FIELDS", fg = "#FF3333")
+            stop = True
+        a11 = [x.get(),y.get(),z.get()]
+
+        [x, y, z] = a2
+        if (len(x.get()) <= 0 or len(y.get()) <= 0 or len(z.get()) <= 0):
+            self.calibStatus.config(text="ERROR FILL ALL ANCHORS FIELDS", fg="#FF3333")
+            stop = True
+        a22 = [x.get(), y.get(), z.get()]
+
+        [x, y, z] = a3
+        if (len(x.get()) <= 0 or len(y.get()) <= 0 or len(z.get()) <= 0):
+            self.calibStatus.config(text="ERROR FILL ALL ANCHORS FIELDS", fg="#FF3333")
+            stop = True
+        a33 = [x.get(), y.get(), z.get()]
+
+        [x, y, z] = a4
+        if (len(x.get()) <= 0 or len(y.get()) <= 0 or len(z.get()) <= 0):
+            self.calibStatus.config(text="ERROR FILL ALL ANCHORS FIELDS", fg="#FF3333")
+            stop = True
+        a44 = [x.get(), y.get(), z.get()]
+
+        if (not stop):
+            self.controller.send_calib([a11,a22,a33,a44])
+            print("calibration")
 
     def update(self):
         print("File not up to date")
