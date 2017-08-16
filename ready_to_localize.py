@@ -170,34 +170,39 @@ class ReadyToLocalize(object):
                 sleep(0.025)
 
 def main_localize(start,changeFile,fileSem,treat):
+    serial_port = None
     try :
         serial_port = get_serial_ports()[0].device
-        print("serial" + serial_port)
-        remote_id = 0x6069  # remote device network ID
-        remote = False  # whether to use a remote device
-        if not remote:
-            remote_id = None
+    except:
+        treat.send_issue("Problem while connecting to POZYX")
+    print("serial" + serial_port)
+    remote_id = 0x6069  # remote device network ID
+    remote = False  # whether to use a remote device
+    if not remote:
+        remote_id = None
 
-        use_processing = True  # enable to send position data through OSC
-        ip = "127.0.0.1"  # IP for the OSC UDP
-        network_port = 8888  # network port for the OSC UDP
-        osc_udp_client = None
-        if use_processing:
-            osc_udp_client = SimpleUDPClient(ip, network_port)
+    use_processing = True  # enable to send position data through OSC
+    ip = "127.0.0.1"  # IP for the OSC UDP
+    network_port = 8888  # network port for the OSC UDP
+    osc_udp_client = None
+    if use_processing:
+        osc_udp_client = SimpleUDPClient(ip, network_port)
         # necessary data for calibration, change the IDs and coordinates yourself
-        anchors = [DeviceCoordinates(0x6121, 1, Coordinates(2750, 30, 1780)),
+    anchors = [DeviceCoordinates(0x6121, 1, Coordinates(2750, 30, 1780)),
                    DeviceCoordinates(0x6115, 1, Coordinates(3500, 4750, 1460)),
                    DeviceCoordinates(0x6157, 1, Coordinates(167, 8250, 1950)),
                    DeviceCoordinates(0x6109, 1, Coordinates(30, 30, 930))]
 
-        algorithm = POZYX_POS_ALG_TRACKING  # positioning algorithm to use
-        dimension = POZYX_3D  # positioning dimension
-        height = 1000  # height of device, required in 2.5D positioning
-
+    algorithm = POZYX_POS_ALG_TRACKING  # positioning algorithm to use
+    dimension = POZYX_3D  # positioning dimension
+    height = 1000  # height of device, required in 2.5D positioning
+    pozyx = None
+    try:
         pozyx = PozyxSerial(serial_port)
-
-    except :
+    except:
         treat.send_issue("Problem while connecting to POZYX")
+
+
     r = None
     while True:
         start.wait()
