@@ -120,7 +120,7 @@ class Message(object):
         for i in range(4):
             index= msg.find("A"+str(i+1),0)
             xindex = index+2
-            yindex = msg.find(",",xindex+1)
+            yindex = msg.find(",",xindex)
             zindex = msg.find(",",yindex+1)
             end = msg.find("A",zindex+1)
             if end < 0:
