@@ -197,7 +197,9 @@ def main_localize(start,changeFile,calib,fileSem,calibSem,treat):
     calib.wait()
     anchors = []
     names = [0x6121,0x6115,0x6157,0x6109]
+    print("[LOCALIZE] waiting for sem calib")
     calibSem.acquire()
+    print("[LOCALIZE] we have sem calib")
     file = open("/tmp/anchors.txt","r")
     for i in range(4):
         line = file.readline()
@@ -210,6 +212,7 @@ def main_localize(start,changeFile,calib,fileSem,calibSem,treat):
                                                      ) ) )
     print ("LOCALIZE : anchors "+ str(anchors))
     treat.send_calibrate()
+    file.close()
     calibSem.release()
     #anchors = [DeviceCoordinates(0x6121, 1, Coordinates(2750, 30, 1780)),
       #             DeviceCoordinates(0x6115, 1, Coordinates(3500, 4750, 1460)),
