@@ -14,6 +14,7 @@ class CTreat(treat.Treat):
         self.started = False
         self.s = s
         self.IHM = IHM
+
     def start(self):
         self.started = True
         print("[Client] start OK")

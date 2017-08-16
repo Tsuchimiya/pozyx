@@ -65,6 +65,7 @@ class STreat(treat.Treat):
     # starting the thread POZYX
     def start(self):
         self.flagStart.set()
+        self.send_start()
 
         #m = message.Message(SERVER,start = True)
         #self.serveur.send_msg(m)
