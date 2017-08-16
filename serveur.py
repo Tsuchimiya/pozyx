@@ -33,7 +33,7 @@ class STreat(treat.Treat):
         self.flagFile = threading.Event()
         self.sem = threading.Semaphore(value = 0)
         self.prefix = ""
-        file = open("/tmp/filename.txt","w") # todo on odroid
+        file = open("/tmp/filename.txt","w",1) # todo on odroid
         file.write("default")
         file.close()
         self.thread = _thread.start_new_thread( ready_to_localize.main_localize, (self.flagStart,self.flagFile,self.sem,self) )
@@ -44,7 +44,7 @@ class STreat(treat.Treat):
     def filename(self,name):
         if (self.flagStart.isSet()):
             self.sem.acquire()
-            file = open("/tmp/filename.txt","w") # todo on odroid
+            file = open("/tmp/filename.txt","w",1) # todo on odroid
             file.write(name)
             file.close()
             self.flagFile.clear()

@@ -20,11 +20,11 @@ import time
 class ReadyToLocalize(object):
     """Continuously calls the Pozyx positioning function and prints its position."""
 
-    def __init__(self, pozyx, osc_udp_client, anchors, filename,
+    def __init__(self, pozyx, osc_udp_client, anchors, filename, treat,
                  algorithm=POZYX_POS_ALG_UWB_ONLY, dimension=POZYX_3D, height=1000, remote_id=None):
         self.pozyx = pozyx
         self.osc_udp_client = osc_udp_client
-
+        self.treat = treat
         self.anchors = anchors
         self.algorithm = algorithm
         self.dimension = dimension
@@ -107,6 +107,9 @@ class ReadyToLocalize(object):
         network_id = self.remote_id
         if network_id is None:
             self.pozyx.getErrorCode(error_code)
+            issue = "ERROR" + str(operation) +", error code " + str(error_code)
+            self.treat.send_issue(issue)
+
             print("ERROR %s, local error code %s" % (operation, str(error_code)))
             if self.osc_udp_client is not None:
                 self.osc_udp_client.send_message("/error", [operation, 0, error_code[0]])
@@ -115,6 +118,8 @@ class ReadyToLocalize(object):
         if status == POZYX_SUCCESS:
             print("ERROR %s on ID %s, error code %s" %
                   (operation, "0x%0.4x" % network_id, str(error_code)))
+            issue = "ERROR" + str(operation)+" on ID "+str(network_id) +", error code "+str(error_code)
+            self.treat.send_issue(issue)
             if self.osc_udp_client is not None:
                 self.osc_udp_client.send_message(
                     "/error", [operation, network_id, error_code[0]])
@@ -220,7 +225,7 @@ def main_localize(start,changeFile,fileSem,treat):
                 else:
                     treat.send_filename()
             else:
-                r = ReadyToLocalize(pozyx, osc_udp_client, anchors, name, algorithm, dimension, height, remote_id)
+                r = ReadyToLocalize(pozyx, osc_udp_client, anchors, name,treat, algorithm, dimension, height, remote_id)
                 treat.send_filename()
 
             if (r is None):
