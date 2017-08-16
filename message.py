@@ -126,9 +126,9 @@ class Message(object):
             if end < 0:
                 end = len(msg) + 1
 
-            anchors.append([int(msg[xindex:(yindex-1)]),
-                            msg[(yindex+1):(zindex-1)],
-                            msg[(zindex+1):(end-1)]
+            anchors.append([int(msg[xindex:(yindex)]),
+                            msg[(yindex+1):(zindex)],
+                            msg[(zindex+1):(end)]
                             ])
 
         print("deformate = "+str(anchors))
