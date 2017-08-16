@@ -56,18 +56,18 @@ class Listen(Thread):
             self.treatment.calibrate(data)
             to_print = data
 
-        print("[Listen] Received :"+to_print)
+        print("[Listen] Received :"+str(to_print))
 
     def run(self):
         while True:
-            #try:
+            try:
                 msg = self.co.recv(self.buffer_size)
                 if not msg : break
                 self.treatMsg(msg)
-            #except:
-                #print("listen : issue")
-               # self.treatment.issue("CONNECTION LOST")
-               # return
-               # break
+            except:
+                print("listen : issue")
+                self.treatment.issue("CONNECTION LOST")
+                return
+                break
 
         return 
