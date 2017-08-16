@@ -3,7 +3,7 @@ from constants import *
 class Message(object):
  
     """ Defines a standard message format for client and server """
-    def __init__ (self,servers_sending,msgs = None,start = False,stop = False,Filename = None,issue = None,close = False ):
+    def __init__ (self,servers_sending,msgs = None,start = False,stop = False,Filename = None,issue = None,close = False,calibrate = None ):
         
         """ Creates a specific msg. 
 
@@ -14,7 +14,11 @@ class Message(object):
         
         msg = ""
         # one attribute at a time so, if there are multiple attributes like start = true + stop = true, raises an exception
-        if (start and stop) or (start and not Filename is None) or (stop and not Filename is None) or ( stop and not issue is None)or (start and not issue is None) or (not Filename is None and not issue is None) or (not Filename is None and close) or (not issue is None and close) or (start and close) or (stop and close):
+        if (start and stop) or (start and not Filename is None) or (stop and not Filename is None) \
+                or ( stop and not issue is None)or (start and not issue is None) or (not Filename is None and not issue is None) \
+                or (not Filename is None and close) or (not issue is None and close) or (start and close) or (stop and close)\
+                or (not Filename is None and not calibrate is None) or (start and not calibrate is None) or (stop and not calibrate is None) \
+                or (not issue is None and not calibrate is None):
             raise RuntimeError ("[Message] Error trying to send an incorrect msg : too many attributes")
 
         # the attribute msgs is a priority
@@ -30,6 +34,9 @@ class Message(object):
                     msg = msg + ISSUE + issue
                 if close:
                     msg = msg + CLOSE
+                if not calibrate is None:
+                    msg = msg + CALIBRATE + self.formate(calibrate)
+
             else:
                 if start:
                     msg = msg + OK_START
@@ -41,12 +48,20 @@ class Message(object):
                     msg = msg + ISSUE + issue
                 if close:
                     msg = msg + CLOSE
+                if not calibrate is None:
+                    msg = msg + OK_CALIBRATE
             b = bytearray()
             b.extend(map(ord, msg))
             self.msg = b
         else:
             self.msg = msgs
 
+    def formate(self,anchors):
+        msg = ""
+        for i in range(len(anchors)):
+            msg = msg + "A1" + str(anchors[i][0]) +"," + str(anchors[i][1]) + "," + str(anchors[i][2])
+        print("formate = "+msg)
+        return msg
 
     def getMsg(self):
         return self.msg
@@ -96,6 +111,37 @@ class Message(object):
             return [False,""]
         else:
             return [False,""]
+
+    def deformate(self,msg):
+        anchors = []
+        for i in range(4):
+            index= msg.find("A"+str(i+1),0)
+            xindex = index+2
+            yindex = msg.find(",",xindex+1)
+            zindex = msg.find(",",yindex+1)
+            end = msg.find("A",zindex+1)
+            if end < 0:
+                end = len(msg) + 1
+
+            anchors.append([int(msg[xindex:(yindex-1)]),
+                            msg[(yindex+1):(zindex-1)],
+                            msg[(zindex+1):(end-1)]
+                            ])
+
+        print("deformate = "+str(anchors))
+        return anchors
+
+
+
+    def isCalibrate(self):
+        strMsg = self.msg.decode()
+        if len(strMsg) > 0:
+            if (strMsg[0] == CALIBRATE):
+                return [True, self.deformate(strMsg[1:])]
+            if (strMsg[0] == OK_CALIBRATE):
+                return [True, ""]
+        return [False, ""]
+
         
         
 

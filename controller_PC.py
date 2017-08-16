@@ -25,6 +25,14 @@ class control(object):
         if(self.C.send_msg(m) < 0):
             self.IHM.event(ACQUISITION_ERROR,"ISSUE WHILE SENDING")
 
+    def send_calib(self,data):
+        m = message.Message(CLIENT, calibrate= data)
+        if (not self.C is None):
+            try:
+                if (self.C.send_msg(m) < 0):
+                    self.IHM.event(CALIBRATE_ERROR, "ISSUE WHILE SENDING")
+            except ConnectionResetError:
+                print("Connection failed, can't send msg")
 
     def send_stop(self):
         m = message.Message(CLIENT, stop=True)
@@ -36,6 +44,7 @@ class control(object):
                 print ("Connection failed, can't send msg")
 
     def send_filename(self,name):
+        self.IHM.event(FILE_STATUS, "FILE SENT (press start to update it)")
         m = message.Message(CLIENT, Filename= name)
         self.send_stop()
         if (self.C.send_msg(m) < 0):

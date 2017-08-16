@@ -32,12 +32,19 @@ class STreat(treat.Treat):
         self.flagStart.clear()
         self.flagFile = threading.Event()
         self.flagFile.clear()
+
+        self.flagCalib = threading.Event()
+        self.flagCalib.clear()
+
         self.sem = threading.Semaphore(value = 0)
+        self.semCalib = threading.Semaphore(value = 1)
         self.prefix = ""
         file = open("/tmp/filename.txt","w",1) # todo on odroid
         file.write("default")
         file.close()
-        self.thread = _thread.start_new_thread( ready_to_localize.main_localize, (self.flagStart,self.flagFile,self.sem,self) )
+        self.thread = _thread.start_new_thread( ready_to_localize.main_localize,
+                                                (self.flagStart,self.flagFile,self.flagCalib,
+                                                 self.sem,self.semCalib,self) )
         self.sem.release()
 
 
@@ -73,6 +80,16 @@ class STreat(treat.Treat):
         #self.serveur.send_msg(m)
         self.serveur.close()
 
+    def calibrate(self,data):
+        print ("[SERVER] calibration :"+str(data))
+        self.flagCalib.set()
+        self.semCalib.acquire()
+        file = open("/tmp/anchors.txt","w",1) # todo on odroid
+        for i in range(4):
+            file.write(str(data[i][0])+","+str(data[i][1])+","+str(data[i][2])+"\n")
+        file.close()
+        self.semCalib.release()
+
     def send_start(self):
         m = message.Message(SERVER, start=True)
         self.serveur.send_msg(m)
@@ -91,6 +108,10 @@ class STreat(treat.Treat):
 
     def send_issue(self,data):
         m = message.Message(SERVER, issue=data)
+        self.serveur.send_msg(m)
+
+    def send_calibrate(self):
+        m = message.Message(SERVER, calibrate="OK")
         self.serveur.send_msg(m)
 
 class Serveur(object):

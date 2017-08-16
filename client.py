@@ -11,15 +11,20 @@ import listen
 class CTreat(treat.Treat):
     def __init__ (self,s,IHM):
         self.closing = False
+        self.started = False
         self.s = s
         self.IHM = IHM
     def start(self):
+        self.started = True
         print("[Client] start OK")
         self.IHM.event(ACQUISITION_STATUS, "ACQUISITION IN PROGRESS")
 
     def stop(self):
-        print("[Client] stop OK")
-        self.IHM.event(ACQUISITION_STATUS, "ACQUISITION PAUSED")
+        if (self.started):
+            self.started = False
+            print("[Client] stop OK")
+            self.IHM.event(ACQUISITION_STATUS, "ACQUISITION PAUSED")
+
     def filename(self,data):
         print("[Client] filename OK")
         self.IHM.event(FILE_STATUS, "FILE UP TO DATE")
@@ -36,6 +41,11 @@ class CTreat(treat.Treat):
                 self.IHM.event(CONNECT_ERROR,data)
         else:
             self.IHM.event(ISSUES,data)
+
+    def calibrate(self,data):
+        print("[Client] Calibrate OK")
+        self.IHM.event(CALIBRATE_STATUS,"CALIBRATION OK")
+
 
 class Client(object):
     """ Connects to a given server and make requests """

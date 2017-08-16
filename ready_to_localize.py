@@ -174,7 +174,7 @@ class ReadyToLocalize(object):
                     "/anchor", [anchor.network_id, int(anchor.coordinates.x), int(anchor.coordinates.y), int(anchor.coordinates.z)])
                 sleep(0.025)
 
-def main_localize(start,changeFile,fileSem,treat):
+def main_localize(start,changeFile,calib,fileSem,calibSem,treat):
     serial_port = None
     try :
         serial_port = get_serial_ports()[0].device
@@ -193,10 +193,28 @@ def main_localize(start,changeFile,fileSem,treat):
     if use_processing:
         osc_udp_client = SimpleUDPClient(ip, network_port)
         # necessary data for calibration, change the IDs and coordinates yourself
-    anchors = [DeviceCoordinates(0x6121, 1, Coordinates(2750, 30, 1780)),
-                   DeviceCoordinates(0x6115, 1, Coordinates(3500, 4750, 1460)),
-                   DeviceCoordinates(0x6157, 1, Coordinates(167, 8250, 1950)),
-                   DeviceCoordinates(0x6109, 1, Coordinates(30, 30, 930))]
+    treat.send_issue("Waiting for anchor calibration...")
+    calib.wait()
+    anchors = []
+    names = [0x6121,0x6115,0x6157,0x6109]
+    calibSem.acquire()
+    file = open("/tmp/anchors.txt","r")
+    for i in range(4):
+        line = file.readline()
+        indx = line.find(",",0)
+        indy = line.find(",",indx + 1 )
+        anchors.append(DeviceCoordinates(names[i],
+                                         Coordinates(int(line[0:(indx-1)]),
+                                                     int(line[(indx +1):(indy -1)]),
+                                                     int(line[(indy - 1):len(line)])
+                                                     ) ) )
+    print ("LOCALIZE : anchors "+ str(anchors))
+    treat.send_calibrate()
+    calibSem.release()
+    #anchors = [DeviceCoordinates(0x6121, 1, Coordinates(2750, 30, 1780)),
+      #             DeviceCoordinates(0x6115, 1, Coordinates(3500, 4750, 1460)),
+       #            DeviceCoordinates(0x6157, 1, Coordinates(167, 8250, 1950)),
+        #           DeviceCoordinates(0x6109, 1, Coordinates(30, 30, 930))]
 
     algorithm = POZYX_POS_ALG_TRACKING  # positioning algorithm to use
     dimension = POZYX_3D  # positioning dimension

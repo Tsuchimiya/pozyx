@@ -51,6 +51,11 @@ class Listen(Thread):
             self.treatment.issue(data)
             to_print = data
 
+        ret, data = msg.isCalibrate()
+        if ret == True:
+            self.treatment.calibrate(data)
+            to_print = data
+
         print("[Listen] Received :"+to_print)
 
     def run(self):

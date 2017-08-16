@@ -17,3 +17,6 @@ class Treat(object):
 
     def issue(self,data):
         print("ISSUE : "+data)
+
+    def calibrate(self,data):
+        print("calibration :"+data)
