@@ -212,7 +212,7 @@ def main_localize(start,changeFile,fileSem,treat):
                     treat.send_filename()
             file.close()
             fileSem.release()
-            r = ReadyToLocalize(pozyx, osc_udp_client, anchors, algorithm, dimension, height, remote_id, file_numbers=1)
+            r = ReadyToLocalize(pozyx, osc_udp_client, anchors,name, algorithm, dimension, height, remote_id)
             if (r is None):
                 treat.send_issue("File exists already")
             r.setup()
