@@ -35,6 +35,7 @@ class Message(object):
                 if close:
                     msg = msg + CLOSE
                 if not calibrate is None:
+                    print ("MESSAGE CALIBRATION")
                     msg = msg + CALIBRATE + self.formate(calibrate)
 
             else:
@@ -58,6 +59,7 @@ class Message(object):
 
     def formate(self,anchors):
         msg = ""
+        print ("MESSAGE FORMATTING")
         for i in range(len(anchors)):
             msg = msg + "A1" + str(anchors[i][0]) +"," + str(anchors[i][1]) + "," + str(anchors[i][2])
         print("formate = "+msg)

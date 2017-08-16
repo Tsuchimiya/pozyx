@@ -27,6 +27,7 @@ class control(object):
 
     def send_calib(self,data):
         m = message.Message(CLIENT, calibrate= data)
+        print("[CONTROLLER_PC] calibration")
         if (not self.C is None):
             try:
                 if (self.C.send_msg(m) < 0):
